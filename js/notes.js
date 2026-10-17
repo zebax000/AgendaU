@@ -45,10 +45,12 @@ class NoteDialog {
 }
 
 class NoteList {
-  constructor(noteRepository, onOpen) {
+  constructor(noteRepository, listElement, loadNotes, onOpen, emptyText) {
     this.noteRepository = noteRepository;
+    this.listElement = listElement;
+    this.loadNotes = loadNotes;
     this.onOpen = onOpen;
-    this.listElement = document.getElementById('notes-list');
+    this.emptyText = emptyText;
     this.listElement.addEventListener('click', (event) => this.handleClick(event));
     document.addEventListener('click', (event) => {
       if (!event.target.closest('.note-menu')) this.closeMenus();
@@ -56,11 +58,11 @@ class NoteList {
   }
 
   async render() {
-    const notes = await this.noteRepository.getGeneral();
+    const notes = await this.loadNotes();
     notes.sort((a, b) => a.deadline.localeCompare(b.deadline));
     this.listElement.innerHTML = notes.length
       ? notes.map((note) => this.createItem(note)).join('')
-      : '<li class="empty">Aún no tienes notas.</li>';
+      : `<li class="empty">${this.emptyText}</li>`;
   }
 
   createItem(note) {
@@ -124,12 +126,20 @@ class NoteList {
 }
 
 class NotesSection {
-  constructor(noteRepository) {
+  constructor(noteRepository, backFor = async () => undefined) {
     this.noteRepository = noteRepository;
+    this.backFor = backFor;
+    this.pendingClassId = null;
     this.panel = new NotePanel(noteRepository, () => this.list.render());
-    this.list = new NoteList(noteRepository, (id, mode) => this.openNote(id, mode));
+    this.list = new NoteList(
+      noteRepository,
+      document.getElementById('notes-list'),
+      () => noteRepository.getGeneral(),
+      (id, mode) => this.openNote(id, mode),
+      'Aún no tienes notas.'
+    );
     this.dialog = new NoteDialog((data) => this.createNote(data));
-    document.getElementById('new-note-btn').addEventListener('click', () => this.dialog.open());
+    document.getElementById('new-note-btn').addEventListener('click', () => this.startNewNote());
   }
 
   async start() {
@@ -137,22 +147,34 @@ class NotesSection {
     this.dialog.open();
   }
 
-  async openNote(id, mode) {
+  startNewNote(classId = null) {
+    this.pendingClassId = classId;
+    this.dialog.open();
+  }
+
+  async openNote(id, mode, back) {
     const note = await this.noteRepository.getById(id);
-    if (note) this.panel.open(note, mode);
+    if (note) this.panel.open(note, mode, back);
   }
 
   async createNote({ title, deadline }) {
+    const classId = this.pendingClassId;
     const note = {
       id: Utils.generateId(),
       title,
       deadline,
-      classId: null,
+      classId,
       lines: [],
       createdAt: new Date().toISOString()
     };
     await this.noteRepository.save(note);
-    await this.list.render();
-    this.panel.open(note, 'edit');
+
+    if (classId === null) {
+      await this.list.render();
+      this.panel.open(note, 'edit');
+    } else {
+      const back = await this.backFor(classId);
+      this.panel.open(note, 'edit', back);
+    }
   }
 }

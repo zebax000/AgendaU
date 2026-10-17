@@ -7,6 +7,7 @@ class NotePanel {
     this.panel = document.getElementById('note-panel');
     this.listView = document.getElementById('notes-view');
     this.note = null;
+    this.back = null;
     this.mode = 'view';
     this.saveTimer = null;
     this.bindEvents();
@@ -19,20 +20,28 @@ class NotePanel {
     this.panel.addEventListener('paste', (event) => this.handlePaste(event));
   }
 
-  open(note, mode) {
+  open(note, mode, back = null) {
     this.note = note;
-    this.listView.hidden = true;
+    this.back = back ?? { view: this.listView, refresh: this.onClose };
+    this.back.view.hidden = true;
     this.panel.hidden = false;
     this.setMode(mode);
   }
 
-  async close() {
+  async dismiss() {
+    if (!this.note) return;
     await this.flush();
     this.panel.hidden = true;
     this.panel.innerHTML = '';
-    this.listView.hidden = false;
     this.note = null;
-    await this.onClose();
+    this.back.view.hidden = false;
+  }
+
+  async close() {
+    if (!this.note) return;
+    const { refresh } = this.back;
+    await this.dismiss();
+    await refresh();
   }
 
   setMode(mode) {

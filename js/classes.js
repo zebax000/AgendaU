@@ -13,6 +13,9 @@ class ClassForm {
           <input type="text" name="name" maxlength="80" required>
         </label>
         <p class="form-hint">Datos del profesor (opcionales)</p>
+        <label>Nombre del profesor
+          <input type="text" name="teacherName" maxlength="80">
+        </label>
         <label>Correo
           <input type="email" name="teacherEmail" maxlength="100">
         </label>
@@ -49,7 +52,7 @@ class ClassForm {
     this.form.reset();
     this.dialog.querySelector('#class-form-title').textContent = classData ? 'Editar clase' : 'Nueva clase';
     if (classData) {
-      ['name', 'teacherEmail', 'teacherPhone', 'officeHours'].forEach((key) => {
+      ['name', 'teacherName', 'teacherEmail', 'teacherPhone', 'officeHours'].forEach((key) => {
         this.field(key).value = classData[key] ?? '';
       });
     }
@@ -64,6 +67,7 @@ class ClassForm {
   async submit() {
     const data = {
       name: this.field('name').value.trim(),
+      teacherName: this.field('teacherName').value.trim(),
       teacherEmail: this.field('teacherEmail').value.trim(),
       teacherPhone: this.field('teacherPhone').value.trim(),
       officeHours: this.field('officeHours').value.trim()
@@ -75,7 +79,9 @@ class ClassForm {
 }
 
 class ClassPanel {
-  constructor(classRepository) {
+  constructor(classRepository, handlers = {}) {
+    const noop = () => {};
+    this.handlers = { onOpen: noop, onAddNote: noop, onAddTask: noop, onChange: noop, ...handlers };
     this.classRepository = classRepository;
     this.zone = document.getElementById('classes-zone');
     this.form = new ClassForm((id, data) => this.saveClass(id, data));
@@ -87,6 +93,15 @@ class ClassPanel {
       <ul id="classes-list"></ul>`;
     this.listElement = this.zone.querySelector('#classes-list');
     this.bindEvents();
+  }
+
+  static detailRows(classData) {
+    const rows = [];
+    if (classData.teacherName) rows.push(['Profesor', classData.teacherName]);
+    if (classData.teacherEmail) rows.push(['Correo', classData.teacherEmail]);
+    if (classData.teacherPhone) rows.push(['Celular', classData.teacherPhone]);
+    if (classData.officeHours) rows.push(['Asesoría', classData.officeHours]);
+    return rows;
   }
 
   bindEvents() {
@@ -110,11 +125,14 @@ class ClassPanel {
   }
 
   createItem(classData) {
+    const teacher = classData.teacherName
+      ? `<span class="class-detail">Profesor: ${Utils.escapeHtml(classData.teacherName)}</span>`
+      : '';
     return `
       <li class="class-item" data-id="${classData.id}">
-        <div class="class-info">
+        <div class="class-main" data-action="open" title="Abrir clase">
           <span class="class-name">${Utils.escapeHtml(classData.name)}</span>
-          ${this.renderDetails(classData)}
+          ${teacher}
         </div>
         <div class="class-menu">
           <button type="button" class="menu-btn" data-action="menu" aria-label="Opciones de la clase">&#8942;</button>
@@ -123,17 +141,11 @@ class ClassPanel {
             <button type="button" class="danger" data-action="delete">Eliminar</button>
           </div>
         </div>
+        <div class="class-actions">
+          <button type="button" data-action="add-note">+ Nota</button>
+          <button type="button" data-action="add-task">+ Tarea</button>
+        </div>
       </li>`;
-  }
-
-  renderDetails(classData) {
-    const rows = [];
-    if (classData.teacherEmail) rows.push(['Correo', classData.teacherEmail]);
-    if (classData.teacherPhone) rows.push(['Celular', classData.teacherPhone]);
-    if (classData.officeHours) rows.push(['Asesoría', classData.officeHours]);
-    return rows
-      .map(([label, value]) => `<span class="class-detail">${label}: ${Utils.escapeHtml(value)}</span>`)
-      .join('');
   }
 
   async handleClick(event) {
@@ -143,6 +155,15 @@ class ClassPanel {
     const id = item.dataset.id;
 
     switch (actionElement.dataset.action) {
+      case 'open':
+        this.handlers.onOpen(id);
+        break;
+      case 'add-note':
+        this.handlers.onAddNote(id);
+        break;
+      case 'add-task':
+        this.handlers.onAddTask(id);
+        break;
       case 'menu':
         this.toggleMenu(item);
         break;
@@ -174,6 +195,7 @@ class ClassPanel {
     const record = { ...(existing ?? { id: Utils.generateId() }), ...data };
     await this.classRepository.save(record);
     await this.render();
+    this.handlers.onChange(record.id);
   }
 
   async deleteClass(id) {
@@ -182,5 +204,6 @@ class ClassPanel {
     if (!confirm(message)) return;
     await this.classRepository.removeWithContent(id);
     await this.render();
+    this.handlers.onChange(id);
   }
 }

@@ -26,15 +26,15 @@
   padding: 14px 18px;
   background: var(--paper);
   border: 1px solid var(--border);
-  border-left: 6px solid var(--accent);
+  border-left: 6px solid var(--navy);
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(20, 40, 70, 0.1);
+  box-shadow: 0 1px 3px rgba(53, 92, 125, 0.12);
   cursor: pointer;
 }
 
 .note-item:hover {
-  border-color: var(--accent);
-  box-shadow: 0 3px 8px rgba(20, 40, 70, 0.15);
+  border-color: var(--rose);
+  box-shadow: 0 3px 8px rgba(53, 92, 125, 0.2);
 }
 
 .note-title {
@@ -48,12 +48,12 @@
 }
 
 .note-item.overdue {
-  border-left-color: var(--danger);
+  border-left-color: var(--coral);
 }
 
 .note-deadline.overdue,
 .note-item.overdue .note-deadline {
-  color: var(--danger);
+  color: var(--overdue);
   font-weight: 700;
 }
 
@@ -70,7 +70,7 @@
 }
 
 .menu-btn:hover {
-  background: var(--panel);
+  background: var(--soft);
 }
 
 .menu {
@@ -86,7 +86,7 @@
   background: var(--paper);
   border: 1px solid var(--border);
   border-radius: 8px;
-  box-shadow: 0 6px 16px rgba(20, 40, 70, 0.2);
+  box-shadow: 0 6px 16px rgba(53, 92, 125, 0.25);
 }
 
 .menu button {
@@ -98,15 +98,15 @@
 }
 
 .menu button:hover {
-  background: var(--bg);
+  background: var(--soft);
 }
 
 .menu button.danger {
-  color: var(--danger);
+  color: var(--overdue);
 }
 
 .menu button.danger:hover {
-  background: #fdeaea;
+  background: var(--overdue-soft);
 }
 
 .empty {
@@ -146,7 +146,7 @@
   background-color: var(--paper);
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(20, 40, 70, 0.1);
+  box-shadow: 0 2px 6px rgba(53, 92, 125, 0.12);
 }
 
 .notebook.reading {
@@ -157,7 +157,7 @@
   display: flex;
   align-items: flex-start;
   min-height: 32px;
-  background-image: linear-gradient(to top, #cfe0f0 1px, transparent 1px);
+  background-image: linear-gradient(to top, #f6dccd 1px, transparent 1px);
 }
 
 .notebook.reading .line {
@@ -190,12 +190,12 @@
   height: 12px;
   margin: -6px 0 0 -6px;
   border-radius: 50%;
-  background: var(--dot-gray);
+  background: var(--dot-text);
   transition: transform 0.1s;
 }
 
 .dot[data-kind="title"]::before {
-  background: var(--danger);
+  background: var(--coral);
 }
 
 button.dot {
@@ -232,7 +232,7 @@ button.dot:hover::before {
 
 .line-input:focus {
   outline: none;
-  background: rgba(31, 95, 166, 0.07);
+  background: rgba(246, 114, 128, 0.1);
 }
 
 .line-text {
@@ -246,4 +246,5 @@ button.dot:hover::before {
 .line-text.title {
   font-size: 19px;
   font-weight: 700;
+  color: var(--navy);
 }

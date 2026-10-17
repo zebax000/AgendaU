@@ -1,0 +1,5 @@
+backups/*
+!backups/.gitkeep
+.vscode/
+.DS_Store
+Thumbs.db

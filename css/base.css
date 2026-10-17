@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  background: #f5f3ee;
+  color: #2b2b2b;
+}
+
+#classes-zone {
+  padding: 16px;
+  background: #e8e2d4;
+  border-right: 2px solid #c9bfa6;
+}
+
+#notes-zone {
+  padding: 24px;
+}

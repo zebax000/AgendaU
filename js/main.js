@@ -13,8 +13,8 @@ class App {
 
     window.agenda = this;
 
-    const notes = await this.noteRepository.getAll();
-    console.log(`AgendaU lista. Notas guardadas: ${notes.length}`);
+    this.notesSection = new NotesSection(this.noteRepository);
+    await this.notesSection.start();
   }
 }
 

@@ -14,8 +14,25 @@
   </aside>
 
   <main id="notes-zone">
-    <h1>Notas</h1>
+    <header class="notes-header">
+      <h1>Notas</h1>
+      <button type="button" id="new-note-btn">+ Nueva nota</button>
+    </header>
+    <ul id="notes-list"></ul>
   </main>
+
+  <dialog id="note-dialog">
+    <form id="note-form">
+      <p class="bot-message">¿Cómo se llama la nota?</p>
+      <input type="text" id="note-title" maxlength="100" placeholder="Título" required>
+      <p class="bot-message">¿Cuál es la fecha límite y la hora?</p>
+      <input type="datetime-local" id="note-deadline" required>
+      <div class="dialog-actions">
+        <button type="button" id="note-cancel">Cancelar</button>
+        <button type="submit">Crear nota</button>
+      </div>
+    </form>
+  </dialog>
 
   <script src="js/utils.js"></script>
   <script src="js/db.js"></script>

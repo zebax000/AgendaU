@@ -144,26 +144,30 @@
   min-height: 60vh;
   padding: 0 20px 0 8px;
   background-color: var(--paper);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 31px,
-    #cfe0f0 31px,
-    #cfe0f0 32px
-  );
   border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(20, 40, 70, 0.1);
+}
+
+.notebook.reading {
+  padding-left: 40px;
 }
 
 .line {
   display: flex;
   align-items: flex-start;
   min-height: 32px;
+  background-image: linear-gradient(to top, #cfe0f0 1px, transparent 1px);
+}
+
+.notebook.reading .line {
+  background-image: none;
 }
 
 .line.spacer {
-  height: 32px;
+  height: 14px;
+  min-height: 14px;
+  background-image: none;
 }
 
 .dot {

@@ -60,7 +60,7 @@ class NotePanel {
         <button type="button" data-action="toggle-mode">${editing ? 'Listo' : 'Editar'}</button>
       </div>
       <p class="save-status" id="save-status"></p>
-      <div class="notebook">${this.renderLines(editing)}</div>`;
+      <div class="notebook ${editing ? 'editing' : 'reading'}">${this.renderLines(editing)}</div>`;
     this.panel.querySelectorAll('.line-input').forEach((input) => this.autosize(input));
   }
 
@@ -78,7 +78,7 @@ class NotePanel {
   renderLine(line, index, editing) {
     const text = Utils.escapeHtml(line.content);
     if (!editing) {
-      return `<div class="line" data-index="${index}"><span class="dot" data-kind="${line.kind}"></span><p class="line-text ${line.kind}">${text}</p></div>`;
+      return `<div class="line" data-index="${index}"><p class="line-text ${line.kind}">${text}</p></div>`;
     }
     return `<div class="line" data-index="${index}"><button type="button" class="dot" data-kind="${line.kind}" data-action="toggle-kind" tabindex="-1" title="Cambiar entre título y texto"></button><textarea class="line-input ${line.kind}" rows="1" spellcheck="false">${text}</textarea></div>`;
   }

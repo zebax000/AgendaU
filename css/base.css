@@ -119,6 +119,26 @@ dialog::backdrop {
   margin-top: 0;
 }
 
+.deadline-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.time-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.time-hint {
+  min-height: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;

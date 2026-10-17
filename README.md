@@ -15,15 +15,15 @@ Las notas se guardan en el navegador (IndexedDB). Usa los botones de exportar e 
 
 - `index.html`: pagina principal.
 - `css/`: estilos (base, notas, clases).
-- `js/`: logica separada por responsabilidad.
+- `js/`: logica separada por responsabilidad (POO con clases).
 - `docs/`: documentacion del modelo de datos.
 - `backups/`: copias de seguridad (ignoradas por Git).
 
 ## Estado
 
-- [ ] Etapa 1: base y estilos
-- [ ] Etapa 2: datos (IndexedDB)
-- [ ] Etapa 3: notas
+- [x] Etapa 1: base y estilos
+- [x] Etapa 2: datos (IndexedDB)
+- [x] Etapa 3: notas (chat de nueva nota, lista, eliminar)
 - [ ] Etapa 4: editor por lineas
 - [ ] Etapa 5: clases, notas y tareas
 - [ ] Etapa 6: respaldo y pulido

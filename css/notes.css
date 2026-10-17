@@ -1,1 +1,69 @@
-/* Estilos de la lista de notas y del editor tipo cuaderno (etapas 3 y 4) */
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.notes-header h1 {
+  margin: 0;
+}
+
+#notes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.note-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.note-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.note-deadline {
+  font-size: 13px;
+  color: #666;
+}
+
+.note-item.overdue {
+  border-left-color: var(--danger);
+}
+
+.note-item.overdue .note-deadline {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.delete-btn {
+  padding: 6px 10px;
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.delete-btn:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.empty {
+  padding: 20px 0;
+  color: #888;
+  font-style: italic;
+}

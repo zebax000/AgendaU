@@ -14,11 +14,15 @@
   </aside>
 
   <main id="notes-zone">
-    <header class="notes-header">
-      <h1>Notas</h1>
-      <button type="button" id="new-note-btn">+ Nueva nota</button>
-    </header>
-    <ul id="notes-list"></ul>
+    <section id="notes-view">
+      <header class="notes-header">
+        <h1>Notas</h1>
+        <button type="button" id="new-note-btn">+ Nueva nota</button>
+      </header>
+      <ul id="notes-list"></ul>
+    </section>
+
+    <section id="note-panel" hidden></section>
   </main>
 
   <dialog id="note-dialog">
@@ -36,6 +40,7 @@
 
   <script src="js/utils.js"></script>
   <script src="js/db.js"></script>
+  <script src="js/editor.js"></script>
   <script src="js/notes.js"></script>
   <script src="js/classes.js"></script>
   <script src="js/backup.js"></script>

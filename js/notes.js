@@ -31,16 +31,21 @@ class NoteDialog {
   async submit() {
     const title = this.titleInput.value.trim();
     if (!title) return;
-    await this.onSubmit({ title, deadline: this.deadlineInput.value });
+    const data = { title, deadline: this.deadlineInput.value };
     this.close();
+    await this.onSubmit(data);
   }
 }
 
 class NoteList {
-  constructor(noteRepository) {
+  constructor(noteRepository, onOpen) {
     this.noteRepository = noteRepository;
+    this.onOpen = onOpen;
     this.listElement = document.getElementById('notes-list');
     this.listElement.addEventListener('click', (event) => this.handleClick(event));
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('.note-menu')) this.closeMenus();
+    });
   }
 
   async render() {
@@ -57,15 +62,55 @@ class NoteList {
       <li class="note-item${overdue}" data-id="${note.id}">
         <span class="note-title">${Utils.escapeHtml(note.title)}</span>
         <span class="note-deadline">${Utils.formatDeadline(note.deadline)}</span>
-        <button type="button" class="delete-btn" data-action="delete">Eliminar</button>
+        <div class="note-menu">
+          <button type="button" class="menu-btn" data-action="menu" aria-label="Opciones de la nota">&#8942;</button>
+          <div class="menu" hidden>
+            <button type="button" data-action="edit">Editar contenido</button>
+            <button type="button" class="danger" data-action="delete">Eliminar</button>
+          </div>
+        </div>
       </li>`;
   }
 
   async handleClick(event) {
-    const button = event.target.closest('[data-action="delete"]');
-    if (!button) return;
+    const item = event.target.closest('.note-item');
+    if (!item) return;
+    const id = item.dataset.id;
+    const actionElement = event.target.closest('[data-action]');
+
+    if (!actionElement) {
+      if (!event.target.closest('.note-menu')) this.onOpen(id, 'view');
+      return;
+    }
+
+    switch (actionElement.dataset.action) {
+      case 'menu':
+        this.toggleMenu(item);
+        break;
+      case 'edit':
+        this.onOpen(id, 'edit');
+        break;
+      case 'delete':
+        await this.deleteNote(id);
+        break;
+    }
+  }
+
+  toggleMenu(item) {
+    const menu = item.querySelector('.menu');
+    const willOpen = menu.hidden;
+    this.closeMenus();
+    menu.hidden = !willOpen;
+  }
+
+  closeMenus() {
+    this.listElement.querySelectorAll('.menu').forEach((menu) => {
+      menu.hidden = true;
+    });
+  }
+
+  async deleteNote(id) {
     if (!confirm('¿Eliminar esta nota?')) return;
-    const id = button.closest('.note-item').dataset.id;
     await this.noteRepository.remove(id);
     await this.render();
   }
@@ -74,7 +119,8 @@ class NoteList {
 class NotesSection {
   constructor(noteRepository) {
     this.noteRepository = noteRepository;
-    this.list = new NoteList(noteRepository);
+    this.panel = new NotePanel(noteRepository, () => this.list.render());
+    this.list = new NoteList(noteRepository, (id, mode) => this.openNote(id, mode));
     this.dialog = new NoteDialog((data) => this.createNote(data));
     document.getElementById('new-note-btn').addEventListener('click', () => this.dialog.open());
   }
@@ -82,6 +128,11 @@ class NotesSection {
   async start() {
     await this.list.render();
     this.dialog.open();
+  }
+
+  async openNote(id, mode) {
+    const note = await this.noteRepository.getById(id);
+    if (note) this.panel.open(note, mode);
   }
 
   async createNote({ title, deadline }) {
@@ -95,5 +146,6 @@ class NotesSection {
     };
     await this.noteRepository.save(note);
     await this.list.render();
+    this.panel.open(note, 'edit');
   }
 }

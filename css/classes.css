@@ -1,1 +1,87 @@
-/* Estilos del panel de clases (etapa 5) */
+.classes-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.classes-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--accent-dark);
+}
+
+#add-class-btn {
+  width: 100%;
+}
+
+#classes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.class-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 8px;
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent-dark);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(20, 40, 70, 0.1);
+}
+
+.class-name {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.class-detail {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.class-menu {
+  position: relative;
+}
+
+.empty-classes {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+#class-form h2 {
+  color: var(--accent-dark);
+}
+
+#class-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#class-form label input {
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.form-hint {
+  margin: 16px 0 10px;
+  padding-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}

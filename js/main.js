@@ -13,6 +13,9 @@ class App {
 
     window.agenda = this;
 
+    this.classPanel = new ClassPanel(this.classRepository);
+    await this.classPanel.start();
+
     this.notesSection = new NotesSection(this.noteRepository);
     await this.notesSection.start();
   }

@@ -6,7 +6,12 @@ class NoteDialog {
     this.dialog = document.getElementById('note-dialog');
     this.form = document.getElementById('note-form');
     this.titleInput = document.getElementById('note-title');
-    this.deadlineInput = document.getElementById('note-deadline');
+    this.dateInput = document.getElementById('note-date');
+    this.timeInput = document.getElementById('note-time');
+    this.refreshTimeHint = Utils.bindTimeHint(
+      this.timeInput,
+      document.getElementById('note-time-hint')
+    );
     this.bindEvents();
   }
 
@@ -20,6 +25,8 @@ class NoteDialog {
 
   open() {
     this.form.reset();
+    this.dateInput.value = Utils.toLocalIso(new Date()).slice(0, 10);
+    this.refreshTimeHint();
     this.dialog.showModal();
     this.titleInput.focus();
   }
@@ -30,10 +37,10 @@ class NoteDialog {
 
   async submit() {
     const title = this.titleInput.value.trim();
-    if (!title) return;
-    const data = { title, deadline: this.deadlineInput.value };
+    const deadline = Utils.buildDeadline(this.dateInput.value, this.timeInput.value);
+    if (!title || !deadline) return;
     this.close();
-    await this.onSubmit(data);
+    await this.onSubmit({ title, deadline });
   }
 }
 

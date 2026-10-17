@@ -30,7 +30,13 @@
       <p class="bot-message">¿Cómo se llama la nota?</p>
       <input type="text" id="note-title" maxlength="100" placeholder="Título" required>
       <p class="bot-message">¿Cuál es la fecha límite y la hora?</p>
-      <input type="datetime-local" id="note-deadline" required>
+      <div class="deadline-row">
+        <input type="date" id="note-date" required>
+        <div class="time-field">
+          <input type="text" id="note-time" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="Hora, ej. 14:30" required>
+          <span class="time-hint" id="note-time-hint"></span>
+        </div>
+      </div>
       <div class="dialog-actions">
         <button type="button" id="note-cancel">Cancelar</button>
         <button type="submit">Crear nota</button>

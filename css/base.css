@@ -93,6 +93,22 @@ input:focus-visible {
   background: var(--blue-soft);
 }
 
+#add-class-btn,
+#new-note-btn,
+[data-view="new-note"],
+[data-view="new-task"] {
+  background: var(--lav-soft);
+  color: var(--text);
+  border: 1px solid var(--lav);
+}
+
+#add-class-btn:hover,
+#new-note-btn:hover,
+[data-view="new-note"]:hover,
+[data-view="new-task"]:hover {
+  background: var(--lav);
+}
+
 input {
   width: 100%;
   font-family: inherit;
@@ -189,4 +205,34 @@ dialog form label input {
   justify-content: flex-end;
   gap: 8px;
   margin-top: 20px;
+}
+
+.backup-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 2px solid var(--lav);
+}
+
+.backup-bar p {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.backup-bar button {
+  font-weight: 400;
+  background: var(--paper);
+  border: 1px solid var(--border);
+}
+
+.backup-bar button:hover {
+  background: var(--lav);
+}
+
+.backup-status {
+  min-height: 16px;
+  font-size: 12px;
 }

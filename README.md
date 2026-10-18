@@ -64,11 +64,4 @@ Tres colores pastel: azul `#8FBCE6`, rosa `#F4A7B9` y lavanda `#B9A7E0`, con bla
 
 ## Estado
 
-- [x] Etapa 1: base y estilos
-- [x] Etapa 2: datos (IndexedDB)
-- [x] Etapa 3: notas (chat de nueva nota, lista, eliminar)
-- [x] Etapa 4: editor por líneas
-- [x] Etapa 5: clases, notas y tareas
-- [x] Etapa 6: respaldo y pulido
-- [x] Etapa 7: calificaciones por clase
-- [x] Etapa 8: calculadora rápida
+- MVP

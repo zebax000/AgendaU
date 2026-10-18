@@ -1,7 +1,7 @@
 'use strict';
 
 class ClassView {
-  constructor({ classRepository, noteRepository, taskRepository, onOpenNote, onNewNote }) {
+  constructor({ classRepository, noteRepository, taskRepository, gradeRepository, onOpenNote, onNewNote }) {
     this.classRepository = classRepository;
     this.onOpenNote = onOpenNote;
     this.onNewNote = onNewNote;
@@ -22,6 +22,7 @@ class ClassView {
       <div class="tabs">
         <button type="button" class="tab" data-view="tab" data-tab="notes">Notas</button>
         <button type="button" class="tab" data-view="tab" data-tab="tasks">Tareas</button>
+        <button type="button" class="tab" data-view="tab" data-tab="grades">Calificaciones</button>
       </div>
       <div id="class-notes-tab">
         <div class="tab-toolbar"><button type="button" data-view="new-note">+ Nueva nota</button></div>
@@ -30,6 +31,10 @@ class ClassView {
       <div id="class-tasks-tab" hidden>
         <div class="tab-toolbar"><button type="button" data-view="new-task">+ Nueva tarea</button></div>
         <ul id="class-tasks-list"></ul>
+      </div>
+      <div id="class-grades-tab" hidden>
+        <div class="tab-toolbar"><button type="button" data-view="new-grade">+ Nueva calificación</button></div>
+        <div id="class-grades-board"></div>
       </div>`;
     document.getElementById('notes-zone').appendChild(this.element);
 
@@ -41,6 +46,7 @@ class ClassView {
       'Esta clase aún no tiene notas.'
     );
     this.taskBoard = new TaskBoard(taskRepository, this.element.querySelector('#class-tasks-list'));
+    this.gradeBoard = new GradeBoard(gradeRepository, this.element.querySelector('#class-grades-board'));
     this.element.addEventListener('click', (event) => this.handleClick(event));
   }
 
@@ -71,7 +77,11 @@ class ClassView {
   }
 
   async refresh() {
-    await Promise.all([this.noteList.render(), this.taskBoard.show(this.classId)]);
+    await Promise.all([
+      this.noteList.render(),
+      this.taskBoard.show(this.classId),
+      this.gradeBoard.show(this.classId)
+    ]);
   }
 
   async syncClass(classId) {
@@ -93,13 +103,20 @@ class ClassView {
   }
 
   selectTab(tab) {
+    const panels = {
+      notes: '#class-notes-tab',
+      tasks: '#class-tasks-tab',
+      grades: '#class-grades-tab'
+    };
+
     this.element.querySelectorAll('.tab').forEach((button) => {
       const active = button.dataset.tab === tab;
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', String(active));
     });
-    this.element.querySelector('#class-notes-tab').hidden = tab !== 'notes';
-    this.element.querySelector('#class-tasks-tab').hidden = tab !== 'tasks';
+    Object.entries(panels).forEach(([name, selector]) => {
+      this.element.querySelector(selector).hidden = name !== tab;
+    });
   }
 
   handleClick(event) {
@@ -117,6 +134,9 @@ class ClassView {
         break;
       case 'new-task':
         this.newTask();
+        break;
+      case 'new-grade':
+        this.gradeBoard.addGrade();
         break;
     }
   }

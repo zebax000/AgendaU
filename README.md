@@ -13,15 +13,26 @@ Agenda local de notas y clases universitarias. Funciona sin internet, sin instal
 - La hora se escribe de 0 a 24 (por ejemplo `14:30`) y la app muestra su equivalente en AM/PM.
 - Escribir cada nota por líneas, como un cuaderno. El punto de la izquierda alterna entre título (rosa) y texto (gris). Los puntos solo aparecen al editar.
 - Agregar clases con nombre del curso y, de forma opcional, nombre, correo y celular del profesor y horarios de asesoría.
-- Abrir una clase para ver sus pestañas de Notas y Tareas. Cada clase tiene botones **+ Nota** y **+ Tarea** en la barra izquierda.
+- Abrir una clase para ver sus pestañas de Notas, Tareas y Calificaciones. Cada clase tiene botones **+ Nota** y **+ Tarea** en la barra izquierda.
 - Marcar tareas como hechas, editar y eliminar notas, tareas y clases (el menú de tres puntos).
+
+## Calificaciones
+
+Cada clase tiene una pestaña **Calificaciones** con tres periodos: primer corte (35%), segundo corte (40%) y final (25%).
+
+- Cada calificación tiene nombre, cuánto vale (% de toda la materia), cuánto sacaste (0 a 5, un decimal) y el periodo.
+- Los pesos de un periodo no pueden pasar de su total. No es obligatorio completarlo (por ejemplo 5% + 10% + 20% llena el primer corte).
+- El final tiene una sola nota y vale 25%.
+- Haz clic en cualquier fila de la tabla para editarla o eliminarla.
+- La nota mínima para aprobar es 3.0 y lo que falta por calificar cuenta como 0.
+- El análisis muestra la definitiva actual, el promedio de lo calificado, el máximo posible, qué promedio necesitas en lo que falta, qué nota necesitas en el final y una proyección si mantienes tu promedio.
 
 ## Datos y copias de seguridad
 
 Todo se guarda en el navegador (IndexedDB) y sigue ahí aunque cierres el HTML.
 La app también pide al navegador que no borre esos datos automáticamente.
 
-Si limpias los datos del sitio o cambias de navegador se pierden. Para evitarlo usa **Exportar copia** (barra izquierda) de vez en cuando y guárdala en la carpeta `backups/`, que Git ignora. **Importar copia** vuelve a cargarla.
+Si limpias los datos del sitio o cambias de navegador se pierden. Para evitarlo usa **Exportar copia** (barra izquierda) de vez en cuando y guárdala en la carpeta `backups/`, que Git ignora. **Importar copia** vuelve a cargarla. Las copias incluyen clases, notas, tareas y calificaciones.
 
 ## Estructura
 
@@ -34,6 +45,8 @@ Si limpias los datos del sitio o cambias de navegador se pierden. Para evitarlo 
   - `notes.js`: chat de nueva nota y lista de notas.
   - `classes.js`: panel de clases y su formulario.
   - `tasks.js`: tareas de cada clase.
+  - `gradecalc.js`: cálculos de calificaciones (sin interfaz).
+  - `grades.js`: formulario y tabla de calificaciones.
   - `classview.js`: vista de una clase con sus pestañas.
   - `backup.js`: exportar e importar copias.
   - `main.js`: arranque y conexión de las piezas.
@@ -52,3 +65,4 @@ Tres colores pastel: azul `#8FBCE6`, rosa `#F4A7B9` y lavanda `#B9A7E0`, con bla
 - [x] Etapa 4: editor por líneas
 - [x] Etapa 5: clases, notas y tareas
 - [x] Etapa 6: respaldo y pulido
+- [x] Etapa 7: calificaciones por clase

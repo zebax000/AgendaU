@@ -12,13 +12,12 @@
 
 #add-class-btn {
   width: 100%;
-  font-weight: 700;
-  background: var(--peach);
-  color: var(--navy);
+  background: var(--pink);
+  color: var(--text);
 }
 
 #add-class-btn:hover {
-  background: #fbc7b3;
+  background: var(--pink-soft);
 }
 
 #classes-list {
@@ -38,9 +37,9 @@
   padding: 12px;
   background: var(--paper);
   color: var(--text);
-  border-left: 6px solid var(--peach);
+  border-left: 6px solid var(--lav);
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 4px rgba(53, 84, 122, 0.2);
 }
 
 .class-main {
@@ -56,7 +55,7 @@
   display: block;
   font-size: 16px;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--deep);
   overflow-wrap: anywhere;
 }
 
@@ -82,21 +81,19 @@
   flex: 1;
   padding: 6px 8px;
   font-size: 13px;
-  font-weight: 700;
-  background: var(--soft);
-  color: var(--navy);
+  background: var(--lav-soft);
+  color: var(--text);
   border: 1px solid var(--border);
 }
 
 .class-actions button:hover {
-  background: var(--peach);
-  color: var(--navy);
+  background: var(--lav);
 }
 
 .empty-classes {
   font-size: 14px;
   font-style: italic;
-  color: #f3e3ea;
+  color: var(--text);
 }
 
 #class-view {
@@ -139,7 +136,6 @@
   margin-bottom: -2px;
   padding: 10px 24px;
   font-size: 15px;
-  font-weight: 700;
   background: transparent;
   color: var(--muted);
   border-bottom: 4px solid transparent;
@@ -147,14 +143,14 @@
 }
 
 .tab:hover {
-  background: var(--soft);
-  color: var(--navy);
+  background: var(--blue-soft);
+  color: var(--text);
 }
 
 .tab.active {
   background: var(--paper);
-  color: var(--navy);
-  border-bottom-color: var(--coral);
+  color: var(--text);
+  border-bottom-color: var(--pink);
 }
 
 .tab-toolbar {
@@ -181,17 +177,17 @@
   padding: 12px 18px;
   background: var(--paper);
   border: 1px solid var(--border);
-  border-left: 6px solid var(--rose);
+  border-left: 6px solid var(--lav);
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(53, 92, 125, 0.12);
+  box-shadow: 0 1px 3px rgba(53, 84, 122, 0.1);
 }
 
 .task-item.overdue {
-  border-left-color: var(--coral);
+  border-left-color: var(--pink);
 }
 
 .task-item.overdue .note-deadline {
-  color: var(--overdue);
+  color: var(--pink-deep);
   font-weight: 700;
 }
 

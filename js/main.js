@@ -10,6 +10,7 @@ class App {
     this.noteRepository = new NoteRepository(this.database);
     this.classRepository = new ClassRepository(this.database);
     this.taskRepository = new TaskRepository(this.database);
+    this.gradeRepository = new GradeRepository(this.database);
 
     window.agenda = this;
 
@@ -22,6 +23,7 @@ class App {
       classRepository: this.classRepository,
       noteRepository: this.noteRepository,
       taskRepository: this.taskRepository,
+      gradeRepository: this.gradeRepository,
       onOpenNote: (id, mode, back) => this.notesSection.openNote(id, mode, back),
       onNewNote: (classId) => this.notesSection.startNewNote(classId)
     });
@@ -46,7 +48,8 @@ class App {
     this.backup = new BackupService({
       classRepository: this.classRepository,
       noteRepository: this.noteRepository,
-      taskRepository: this.taskRepository
+      taskRepository: this.taskRepository,
+      gradeRepository: this.gradeRepository
     });
     this.backup.mount(document.getElementById('classes-zone'));
     BackupService.requestPersistence();

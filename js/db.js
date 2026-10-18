@@ -2,7 +2,7 @@
 
 class Database {
   static NAME = 'AgendaU';
-  static VERSION = 1;
+  static VERSION = 2;
 
   constructor() {
     this.connection = null;
@@ -12,8 +12,12 @@ class Database {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(Database.NAME, Database.VERSION);
       request.onupgradeneeded = () => this.createStores(request.result);
+      request.onblocked = () => {
+        console.warn('Cierra las otras pestañas de AgendaU para actualizar la base de datos.');
+      };
       request.onsuccess = () => {
         this.connection = request.result;
+        this.connection.onversionchange = () => this.connection.close();
         resolve(this);
       };
       request.onerror = () => reject(request.error);
@@ -21,11 +25,18 @@ class Database {
   }
 
   createStores(db) {
-    db.createObjectStore('classes', { keyPath: 'id' });
-    db.createObjectStore('notes', { keyPath: 'id' })
-      .createIndex('classId', 'classId');
-    db.createObjectStore('tasks', { keyPath: 'id' })
-      .createIndex('classId', 'classId');
+    if (!db.objectStoreNames.contains('classes')) {
+      db.createObjectStore('classes', { keyPath: 'id' });
+    }
+    if (!db.objectStoreNames.contains('notes')) {
+      db.createObjectStore('notes', { keyPath: 'id' }).createIndex('classId', 'classId');
+    }
+    if (!db.objectStoreNames.contains('tasks')) {
+      db.createObjectStore('tasks', { keyPath: 'id' }).createIndex('classId', 'classId');
+    }
+    if (!db.objectStoreNames.contains('grades')) {
+      db.createObjectStore('grades', { keyPath: 'id' }).createIndex('classId', 'classId');
+    }
   }
 
   run(storeName, mode, action) {
@@ -85,6 +96,12 @@ class TaskRepository extends Repository {
   }
 }
 
+class GradeRepository extends Repository {
+  constructor(database) {
+    super(database, 'grades');
+  }
+}
+
 class ClassRepository extends Repository {
   constructor(database) {
     super(database, 'classes');
@@ -93,12 +110,12 @@ class ClassRepository extends Repository {
   removeWithContent(classId) {
     return new Promise((resolve, reject) => {
       const transaction = this.database.connection.transaction(
-        ['classes', 'notes', 'tasks'],
+        ['classes', 'notes', 'tasks', 'grades'],
         'readwrite'
       );
       transaction.objectStore('classes').delete(classId);
 
-      ['notes', 'tasks'].forEach((storeName) => {
+      ['notes', 'tasks', 'grades'].forEach((storeName) => {
         const store = transaction.objectStore(storeName);
         store.index('classId').openKeyCursor(IDBKeyRange.only(classId)).onsuccess = (event) => {
           const cursor = event.target.result;

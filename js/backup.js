@@ -1,12 +1,13 @@
 'use strict';
 
 class BackupService {
-  static FORMAT_VERSION = 1;
+  static FORMAT_VERSION = 2;
 
-  constructor({ classRepository, noteRepository, taskRepository }) {
+  constructor({ classRepository, noteRepository, taskRepository, gradeRepository }) {
     this.classRepository = classRepository;
     this.noteRepository = noteRepository;
     this.taskRepository = taskRepository;
+    this.gradeRepository = gradeRepository;
   }
 
   static async requestPersistence() {
@@ -44,10 +45,11 @@ class BackupService {
   }
 
   async exportData() {
-    const [classes, notes, tasks] = await Promise.all([
+    const [classes, notes, tasks, grades] = await Promise.all([
       this.classRepository.getAll(),
       this.noteRepository.getAll(),
-      this.taskRepository.getAll()
+      this.taskRepository.getAll(),
+      this.gradeRepository.getAll()
     ]);
     const data = {
       app: 'AgendaU',
@@ -55,7 +57,8 @@ class BackupService {
       exportedAt: new Date().toISOString(),
       classes,
       notes,
-      tasks
+      tasks,
+      grades
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -66,7 +69,9 @@ class BackupService {
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-    this.setStatus(`Copia exportada: ${classes.length} clases, ${notes.length} notas, ${tasks.length} tareas.`);
+    this.setStatus(
+      `Copia exportada: ${classes.length} clases, ${notes.length} notas, ${tasks.length} tareas, ${grades.length} calificaciones.`
+    );
   }
 
   async importSelected() {
@@ -77,14 +82,16 @@ class BackupService {
     try {
       const data = JSON.parse(await file.text());
       this.validate(data);
+      const grades = data.grades ?? [];
       const message =
-        `Se importarán ${data.classes.length} clases, ${data.notes.length} notas y ${data.tasks.length} tareas.\n` +
+        `Se importarán ${data.classes.length} clases, ${data.notes.length} notas, ${data.tasks.length} tareas y ${grades.length} calificaciones.\n` +
         'Los elementos con el mismo id se sobrescriben y los demás se conservan. ¿Continuar?';
       if (!confirm(message)) return;
 
       await this.saveAll(this.classRepository, data.classes);
       await this.saveAll(this.noteRepository, data.notes);
       await this.saveAll(this.taskRepository, data.tasks);
+      await this.saveAll(this.gradeRepository, grades);
       this.setStatus('Copia importada. Recargando...');
       setTimeout(() => location.reload(), 600);
     } catch (error) {
@@ -96,8 +103,11 @@ class BackupService {
     const valid =
       data && data.app === 'AgendaU' && ['classes', 'notes', 'tasks'].every((key) => Array.isArray(data[key]));
     if (!valid) throw new Error('el archivo no es una copia de AgendaU.');
+    if (data.grades !== undefined && !Array.isArray(data.grades)) {
+      throw new Error('las calificaciones del archivo no son válidas.');
+    }
 
-    const items = [...data.classes, ...data.notes, ...data.tasks];
+    const items = [...data.classes, ...data.notes, ...data.tasks, ...(data.grades ?? [])];
     if (!items.every((item) => item && typeof item.id === 'string')) {
       throw new Error('hay elementos sin id.');
     }

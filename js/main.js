@@ -43,6 +43,14 @@ class App {
       onChange: (id) => this.classView.syncClass(id)
     });
 
+    this.backup = new BackupService({
+      classRepository: this.classRepository,
+      noteRepository: this.noteRepository,
+      taskRepository: this.taskRepository
+    });
+    this.backup.mount(document.getElementById('classes-zone'));
+    BackupService.requestPersistence();
+
     await this.classPanel.start();
     await this.notesSection.start();
   }

@@ -45,6 +45,9 @@ class App {
       onChange: (id) => this.classView.syncClass(id)
     });
 
+    this.quickCalculator = new QuickCalculator();
+    this.quickCalculator.mount(document.getElementById('add-class-btn'));
+
     this.backup = new BackupService({
       classRepository: this.classRepository,
       noteRepository: this.noteRepository,

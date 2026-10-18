@@ -25,7 +25,11 @@ Cada clase tiene una pestaña **Calificaciones** con tres periodos: primer corte
 - El final tiene una sola nota y vale 25%.
 - Haz clic en cualquier fila de la tabla para editarla o eliminarla.
 - La nota mínima para aprobar es 3.0 y lo que falta por calificar cuenta como 0.
-- El análisis muestra la definitiva actual, el promedio de lo calificado, el máximo posible, qué promedio necesitas en lo que falta, qué nota necesitas en el final y una proyección si mantienes tu promedio.
+- El análisis muestra la definitiva actual, el máximo posible, qué promedio necesitas en lo que falta de los cortes (75%) para no necesitar nada en el final y qué nota necesitas en el final.
+
+## Calculadora rápida
+
+El botón **¿Cuánto me falta para el final?** (arriba de + Agregar clase) calcula al instante, sin guardar nada: ingresas tus notas con su porcentaje y te dice qué promedio necesitas en el porcentaje que falta para llegar a 3.0.
 
 ## Datos y copias de seguridad
 
@@ -47,6 +51,7 @@ Si limpias los datos del sitio o cambias de navegador se pierden. Para evitarlo 
   - `tasks.js`: tareas de cada clase.
   - `gradecalc.js`: cálculos de calificaciones (sin interfaz).
   - `grades.js`: formulario y tabla de calificaciones.
+  - `quickcalc.js`: calculadora rápida.
   - `classview.js`: vista de una clase con sus pestañas.
   - `backup.js`: exportar e importar copias.
   - `main.js`: arranque y conexión de las piezas.
@@ -66,3 +71,4 @@ Tres colores pastel: azul `#8FBCE6`, rosa `#F4A7B9` y lavanda `#B9A7E0`, con bla
 - [x] Etapa 5: clases, notas y tareas
 - [x] Etapa 6: respaldo y pulido
 - [x] Etapa 7: calificaciones por clase
+- [x] Etapa 8: calculadora rápida

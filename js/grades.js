@@ -152,6 +152,7 @@ class GradeBoard {
     const analysis = GradeCalculator.analyze(this.grades);
 
     this.container.innerHTML = `
+      <p class="grades-rule">Las notas que aún no tienes cuentan como 0.</p>
       <div class="grades-scroll">
         ${analysis.blocks.map((block) => this.renderBlock(block)).join('')}
         ${this.renderAnalysis(analysis)}
@@ -184,7 +185,7 @@ class GradeBoard {
             </tr>
           </tfoot>
         </table>
-        <p class="grade-note">Con lo que hay, este periodo equivale a <strong>${block.score.toFixed(1)}</strong> de 5.0 (lo que falta cuenta como 0).</p>
+        <p class="grade-note">Nota del periodo: <strong>${block.score.toFixed(1)}</strong> / 5.0</p>
       </section>`;
   }
 
@@ -204,7 +205,7 @@ class GradeBoard {
       return `
         <section class="grade-analysis">
           <h3>Análisis</h3>
-          <p class="empty">Agrega al menos una calificación y aquí verás tu definitiva, lo que necesitas en el final y tu proyección.</p>
+          <p class="empty">Agrega una calificación para ver tu análisis.</p>
         </section>`;
     }
 
@@ -217,29 +218,39 @@ class GradeBoard {
       <section class="grade-analysis">
         <h3>Análisis</h3>
         <div class="grade-stats">
-          ${this.renderStat('Definitiva actual', analysis.points.toFixed(2), 'lo que falta cuenta como 0')}
-          ${this.renderStat('Promedio de lo calificado', analysis.average.toFixed(2), `${analysis.registered}% de la materia`)}
-          ${this.renderStat('Máximo posible', maxPossible.toFixed(2), `con 5.0 en el ${analysis.remainingWeight}% que falta`)}
+          ${this.renderStat('Definitiva actual', analysis.points.toFixed(2))}
+          ${this.renderStat('Máximo posible', maxPossible.toFixed(2), 'si sacas 5.0 en lo que falta')}
         </div>
         <ul class="grade-messages">${messages}</ul>
       </section>`;
   }
 
-  renderStat(label, value, hint) {
-    return `<div class="grade-stat"><span>${label}</span><strong>${value}</strong><small>${hint}</small></div>`;
+  renderStat(label, value, hint = '') {
+    const note = hint ? `<small>${hint}</small>` : '';
+    return `<div class="grade-stat"><span>${label}</span><strong>${value}</strong>${note}</div>`;
   }
 
   buildMessages(analysis) {
     const passing = GradeCalculator.PASSING.toFixed(1);
+    const { neededInCuts: cuts, neededInFinal: final, cutsWeight } = analysis;
     const messages = [];
 
     if (analysis.status === 'passed') {
-      messages.push(['good', `Con lo que llevas ya alcanzas ${passing}, incluso si lo que falta sale en 0.`]);
+      messages.push(['good', `Ya alcanzas ${passing} con lo que llevas.`]);
     } else if (analysis.status === 'impossible') {
       messages.push([
         'bad',
         `Aunque saques 5.0 en todo lo que falta, llegarías a ${analysis.maxPossible.toFixed(2)} y no alcanzas ${passing}.`
       ]);
+    } else if (final) {
+      if (cuts && cuts.reachable) {
+        messages.push([
+          '',
+          `Para no necesitar nada en el final, necesitas mantener un promedio de ${cuts.needed.toFixed(1)} en el ${cuts.remaining}% que falta de los cortes (${cuts.weight}%).`
+        ]);
+      } else if (cuts) {
+        messages.push(['', 'Aunque saques 5.0 en lo que falta de los cortes, vas a necesitar nota en el final.']);
+      }
     } else {
       messages.push([
         '',
@@ -247,19 +258,16 @@ class GradeBoard {
       ]);
     }
 
-    const final = analysis.neededInFinal;
     if (final && analysis.status === 'possible') {
       if (final.reachable) {
-        messages.push(['', `Si lo demás se queda como está, necesitas ${final.needed.toFixed(1)} en el final para llegar a ${passing}.`]);
+        messages.push([
+          '',
+          `Con lo que llevas en los cortes (${cutsWeight}%), necesitas ${final.needed.toFixed(1)} en el final para llegar a ${passing}.`
+        ]);
       } else {
         messages.push(['bad', `Con el final solo no alcanzas ${passing}: necesitas sumar más en los cortes.`]);
       }
     }
-    if (analysis.finalRegistered) messages.push(['', 'Ya registraste la nota del final.']);
-
-    const average = analysis.average.toFixed(2);
-    const verdict = analysis.average >= GradeCalculator.PASSING ? 'aprobarías' : `no alcanzarías ${passing}`;
-    messages.push(['', `Proyección: si mantienes tu promedio de ${average} en lo que falta, terminarías con ${average} y ${verdict}.`]);
     return messages;
   }
 

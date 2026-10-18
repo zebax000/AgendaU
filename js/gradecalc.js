@@ -62,6 +62,23 @@ class GradeCalculator {
     };
   }
 
+  static neededInCuts(blocks) {
+    const cuts = blocks.filter((block) => block.id !== 'final');
+    const weight = cuts.reduce((sum, block) => sum + block.weight, 0);
+    const registered = GradeCalculator.round(cuts.reduce((sum, block) => sum + block.registered, 0));
+    const points = cuts.reduce((sum, block) => sum + block.points, 0);
+    const remaining = GradeCalculator.round(weight - registered);
+    if (remaining <= 0) return null;
+
+    const needed = (GradeCalculator.PASSING - points) / (remaining / 100);
+    return {
+      weight,
+      remaining,
+      needed: Math.max(0, GradeCalculator.ceilTenth(needed)),
+      reachable: needed <= GradeCalculator.MAX_SCORE
+    };
+  }
+
   static analyze(grades) {
     const { PASSING, MAX_SCORE } = GradeCalculator;
     const blocks = GradeCalculator.BLOCKS.map((block) => GradeCalculator.summarizeBlock(block, grades));
@@ -83,11 +100,27 @@ class GradeCalculator {
       points,
       maxPossible,
       status,
-      average: registered > 0 ? points / (registered / 100) : null,
+      cutsWeight: blocks.filter((block) => block.id !== 'final').reduce((sum, block) => sum + block.weight, 0),
       neededOnRemaining:
         status === 'possible' ? GradeCalculator.ceilTenth(missingPoints / (remainingWeight / 100)) : null,
-      neededInFinal: GradeCalculator.neededInFinal(blocks),
-      finalRegistered: blocks.find((block) => block.id === 'final').registered > 0
+      neededInCuts: GradeCalculator.neededInCuts(blocks),
+      neededInFinal: GradeCalculator.neededInFinal(blocks)
     };
+  }
+
+  static quick(entries) {
+    const { PASSING, MAX_SCORE } = GradeCalculator;
+    const registered = GradeCalculator.round(entries.reduce((sum, entry) => sum + entry.percent, 0));
+    const points = entries.reduce((sum, entry) => sum + (entry.score * entry.percent) / 100, 0);
+    const remaining = GradeCalculator.round(100 - registered);
+    const maxPossible = points + (remaining * MAX_SCORE) / 100;
+    const base = { registered, remaining, points, maxPossible };
+
+    if (remaining < 0) return { ...base, status: 'invalid' };
+    if (points >= PASSING) return { ...base, status: 'passed' };
+    if (remaining === 0 || maxPossible < PASSING) return { ...base, status: 'impossible' };
+
+    const needed = GradeCalculator.ceilTenth((PASSING - points) / (remaining / 100));
+    return { ...base, status: 'possible', needed };
   }
 }

@@ -202,3 +202,212 @@
 .task-menu {
   position: relative;
 }
+
+[data-view="new-grade"] {
+  background: var(--lav-soft);
+  color: var(--text);
+  border: 1px solid var(--lav);
+}
+
+[data-view="new-grade"]:hover {
+  background: var(--lav);
+}
+
+.grades-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 62vh;
+  padding-right: 6px;
+  overflow-y: auto;
+}
+
+.grade-block {
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--blue);
+  border-radius: 8px;
+}
+
+.grade-block-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.grade-block-header h3 {
+  margin: 0;
+  font-size: 17px;
+  color: var(--deep);
+}
+
+.grade-progress-text {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.grade-progress {
+  height: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  background: var(--blue-soft);
+  border-radius: 4px;
+}
+
+.grade-progress-bar {
+  height: 100%;
+  background: var(--blue);
+}
+
+.grade-block.complete {
+  border-left-color: var(--lav);
+}
+
+.grade-block.complete .grade-progress-bar {
+  background: var(--lav);
+}
+
+.grade-table {
+  width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+
+.grade-table th {
+  padding: 6px 8px;
+  font-size: 12px;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 2px solid var(--border);
+}
+
+.grade-table td {
+  padding: 9px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.grade-table th:nth-child(n + 2),
+.grade-table td:nth-child(n + 2) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.grade-row {
+  cursor: pointer;
+}
+
+.grade-row:hover,
+.grade-row:focus-visible {
+  background: var(--blue-soft);
+  outline: 2px solid var(--lav-deep);
+  outline-offset: -2px;
+}
+
+.grade-row td:first-child {
+  font-weight: 700;
+}
+
+.grade-table .grade-empty td {
+  font-style: italic;
+  text-align: left;
+  color: var(--muted);
+}
+
+.grade-table tfoot td {
+  font-weight: 700;
+  background: var(--lav-soft);
+  border-bottom: none;
+}
+
+.grade-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.grade-analysis {
+  padding: 16px;
+  background: var(--lav-soft);
+  border: 1px solid var(--lav);
+  border-radius: 8px;
+}
+
+.grade-analysis h3 {
+  margin: 0 0 12px;
+  color: var(--deep);
+}
+
+.grade-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.grade-stat {
+  padding: 10px 12px;
+  background: var(--paper);
+  border-radius: 8px;
+}
+
+.grade-stat span,
+.grade-stat small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.grade-stat strong {
+  font-size: 24px;
+  color: var(--deep);
+}
+
+.grade-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+.grade-message.good {
+  font-weight: 700;
+}
+
+.grade-message.bad {
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+.grade-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--deep);
+}
+
+dialog form select {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.danger-btn {
+  margin-right: auto;
+  color: var(--pink-deep);
+  background: var(--pink-soft);
+  border: 1px solid var(--pink);
+}
+
+.danger-btn:hover {
+  background: var(--pink);
+}
